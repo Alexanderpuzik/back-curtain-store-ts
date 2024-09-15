@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": " ts-node index.ts",
+    "dev": " ts-node src/index.ts",
     "build": "tsc",
     "lint": "eslint .",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\""

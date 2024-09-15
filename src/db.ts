@@ -8,7 +8,7 @@ export default function dbConnection() {
   const port = process.env.DB_PORT;
 
   if (!dbName || !user || !password || !host || !port) {
-    throw new Error('Not found ');
+    throw new Error('Not found db connection env');
   }
 
   return new Sequelize(dbName, user, password, {
