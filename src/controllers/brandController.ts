@@ -1,22 +1,63 @@
-const { Brand } = require('../models/models');
-const ApiError = require('../error/ApiError');
+import { Request, Response, NextFunction } from 'express';
+import { Brand } from '../models/models';
+import ApiError from '../error/ApiError';
 
 class BrandController {
-  async create(req, res) {
-    const { name } = req.body;
-    const brand = await Brand.create({ name });
-    return res.json(brand);
-  }
-  async getAll(req, res) {
-    const brands = await Brand.findAll();
-    return res.json(brands);
+  async create(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response | void> {
+    try {
+      const { name } = req.body;
+      if (!name) {
+        return next(ApiError.badRequest('Name is required'));
+      }
+      const brand = await Brand.create({ name });
+      return res.json(brand);
+    } catch (error) {
+      return next(
+        ApiError.internal('Something went wrong while creating the brand')
+      );
+    }
   }
 
-  async getOne(req, res) {
-    const { id } = req.params;
-    const curtain = await Brand.findOne({ where: { id } });
-    return res.json(curtain);
+  async getAll(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response | void> {
+    try {
+      const brands = await Brand.findAll();
+      return res.json(brands);
+    } catch (error) {
+      return next(
+        ApiError.internal('Something went wrong while fetching the brands')
+      );
+    }
+  }
+
+  async getOne(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response | void> {
+    try {
+      const { id } = req.params;
+      if (!id) {
+        return next(ApiError.badRequest('ID is required'));
+      }
+      const brand = await Brand.findOne({ where: { id } });
+      if (!brand) {
+        return next(ApiError.notFound('Brand not found'));
+      }
+      return res.json(brand);
+    } catch (error) {
+      return next(
+        ApiError.internal('Something went wrong while fetching the brand')
+      );
+    }
   }
 }
 
-module.exports = new BrandController();
+export default new BrandController();
