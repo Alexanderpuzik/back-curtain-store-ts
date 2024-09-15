@@ -1,15 +1,15 @@
-const uuid = require("uuid");
-const path = require("path");
-const { Curtain, CurtainInfo } = require("../models/models");
-const ApiError = require("../error/ApiError");
+const uuid = require('uuid');
+const path = require('path');
+const { Curtain, CurtainInfo } = require('../models/models');
+const ApiError = require('../error/ApiError');
 
 class CurtainController {
   async create(req, res, next) {
     try {
       let { name, price, brandId, typeId, info } = req.body;
       const { img } = req.files;
-      let fileName = uuid.v4() + ".jpg";
-      img.mv(path.resolve(__dirname, "..", "static", fileName));
+      let fileName = uuid.v4() + '.jpg';
+      img.mv(path.resolve(__dirname, '..', 'static', fileName));
       const curtain = await Curtain.create({
         name,
         price,
@@ -20,7 +20,7 @@ class CurtainController {
 
       if (info) {
         info = JSON.parse(info);
-        info.forEach((i) =>
+        info.forEach(i =>
           CurtainInfo.create({
             title: i.title,
             description: i.description,
@@ -72,7 +72,7 @@ class CurtainController {
     const { id } = req.params;
     const curtain = await Curtain.findOne({
       where: { id },
-      include: [{ model: CurtainInfo, as: "info" }],
+      include: [{ model: CurtainInfo, as: 'info' }],
     });
     return res.json(curtain);
   }
