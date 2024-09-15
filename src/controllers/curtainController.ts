@@ -1,15 +1,28 @@
-const uuid = require('uuid');
-const path = require('path');
-const { Curtain, CurtainInfo } = require('../models/models');
-const ApiError = require('../error/ApiError');
+import { Request, Response, NextFunction } from 'express';
+import { v4 as uuidv4 } from 'uuid';
+import path from 'path';
+import { Curtain, CurtainInfo } from '../models/models';
+import ApiError from '../error/ApiError';
 
 class CurtainController {
-  async create(req, res, next) {
+  async create(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response | void> {
     try {
       let { name, price, brandId, typeId, info } = req.body;
-      const { img } = req.files;
-      let fileName = uuid.v4() + '.jpg';
-      img.mv(path.resolve(__dirname, '..', 'static', fileName));
+      const { img } = req.files as {
+        [fieldname: string]: Express.Multer.File[];
+      }; // Adjust the type according to your file upload library
+
+      if (!img) {
+        throw new Error('Image file is required');
+      }
+
+      let fileName = uuidv4() + '.jpg';
+      img.mv(path.resolve(__dirname, '..', 'static', fileName)); // Adjust according to actual function for moving files
+
       const curtain = await Curtain.create({
         name,
         price,
@@ -20,13 +33,13 @@ class CurtainController {
 
       if (info) {
         info = JSON.parse(info);
-        info.forEach(i =>
-          CurtainInfo.create({
+        info.forEach(async (i: { title: string; description: string }) => {
+          await CurtainInfo.create({
             title: i.title,
             description: i.description,
             curtainId: curtain.id,
-          })
-        );
+          });
+        });
       }
 
       return res.json(curtain);
@@ -35,30 +48,28 @@ class CurtainController {
     }
   }
 
-  async getAll(req, res) {
+  async getAll(req: Request, res: Response): Promise<Response> {
     let { brandId, typeId, limit, page } = req.query;
-    page = page || 1;
-    limit = limit || 9;
+    page = Number(page) || 1;
+    limit = Number(limit) || 9;
     let offset = page * limit - limit;
+
     let curtains;
     if (!brandId && !typeId) {
       curtains = await Curtain.findAndCountAll({ limit, offset });
-    }
-    if (brandId && !typeId) {
+    } else if (brandId && !typeId) {
       curtains = await Curtain.findAndCountAll({
         where: { brandId },
         limit,
         offset,
       });
-    }
-    if (!brandId && typeId) {
+    } else if (!brandId && typeId) {
       curtains = await Curtain.findAndCountAll({
         where: { typeId },
         limit,
         offset,
       });
-    }
-    if (brandId && typeId) {
+    } else if (brandId && typeId) {
       curtains = await Curtain.findAndCountAll({
         where: { typeId, brandId },
         limit,
@@ -68,7 +79,7 @@ class CurtainController {
     return res.json(curtains);
   }
 
-  async getOne(req, res) {
+  async getOne(req: Request, res: Response): Promise<Response> {
     const { id } = req.params;
     const curtain = await Curtain.findOne({
       where: { id },
@@ -78,4 +89,4 @@ class CurtainController {
   }
 }
 
-module.exports = new CurtainController();
+export default new CurtainController();
