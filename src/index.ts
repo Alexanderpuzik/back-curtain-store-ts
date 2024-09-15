@@ -1,6 +1,5 @@
 import express from 'express';
 import dbConnection from './db';
-import setModels from './models/models';
 import cors from 'cors';
 import fileUpload from 'express-fileupload';
 import { router } from './routes';
@@ -25,7 +24,6 @@ const start = async () => {
 
   try {
     const sequelize = dbConnection();
-    setModels(sequelize);
     await sequelize.authenticate();
     await sequelize.sync();
 
