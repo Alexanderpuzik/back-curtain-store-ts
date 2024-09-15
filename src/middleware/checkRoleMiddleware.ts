@@ -1,13 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
+import { UserPayload } from './interfaces';
 
 export default function checkRoleMiddleware(role: string) {
-  return function (
-    err: Error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  return function (req: Request, res: Response, next: NextFunction) {
     if (req.method === 'OPTIONS') {
       next();
     }
@@ -16,13 +12,15 @@ export default function checkRoleMiddleware(role: string) {
       if (!token) return res.status(401).json({ message: 'Не авторизован' });
 
       const secretKey = process.env.SECRET_KEY;
-      if (!secretKey) return res.status(500);
+      if (!secretKey) return res.status(500).json({ message: 'Server error' });
 
-      const decoded = jwt.verify(token, secretKey);
+      const decoded = jwt.verify(token, secretKey) as UserPayload;
 
       if (decoded.role !== role) {
         return res.status(403).json({ message: 'Нет доступа' });
       }
+      //FIXME - do not use @ts-ignore
+      //@ts-ignore
       req.user = decoded;
       next();
     } catch {
