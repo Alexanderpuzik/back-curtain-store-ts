@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import path from 'path';
 import { Curtain, CurtainInfo } from '../models/models';
 import ApiError from '../error/ApiError';
+import { MulterFile } from '../types/express';
 
 class CurtainController {
   async create(
@@ -12,7 +13,9 @@ class CurtainController {
   ): Promise<Response | void> {
     try {
       let { name, price, brandId, typeId, info } = req.body;
-      const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+      const files = req.files as unknown as {
+        [fieldname: string]: MulterFile[];
+      };
 
       // Проверяем наличие ключа 'img' и извлекаем его
       const imgFiles = files['img'];
@@ -25,7 +28,7 @@ class CurtainController {
       // Генерируем уникальное имя файла
       let fileName = `${uuidv4()}.jpg`;
       // Перемещаем полученный файл в директорию 'static'
-      img.mv(path.resolve(__dirname, '..', 'static', fileName), err => {
+      img.mv(path.resolve(__dirname, '..', 'static', fileName), (err: any) => {
         if (err) {
           throw new Error('File upload failed');
         }
@@ -57,7 +60,7 @@ class CurtainController {
       }
 
       return res.json(curtain);
-    } catch (e) {
+    } catch (e: any) {
       next(ApiError.badRequest(e.message));
     }
   }
@@ -68,29 +71,27 @@ class CurtainController {
     let limit: number = parseInt(req.query.limit as string) || 9;
     let offset = (page - 1) * limit;
 
-    // Делаем запрос в базу данных на основе условий фильтрации
+    let whereClause: { [key: string]: number } = {};
+
+    if (brandId) {
+      whereClause.brandId = Number(brandId);
+    }
+
+    if (typeId) {
+      whereClause.typeId = Number(typeId);
+    }
+
     let curtains;
     if (!brandId && !typeId) {
       curtains = await Curtain.findAndCountAll({ limit, offset });
-    } else if (brandId && !typeId) {
+    } else {
       curtains = await Curtain.findAndCountAll({
-        where: { brandId },
-        limit,
-        offset,
-      });
-    } else if (!brandId && typeId) {
-      curtains = await Curtain.findAndCountAll({
-        where: { typeId },
-        limit,
-        offset,
-      });
-    } else if (brandId && typeId) {
-      curtains = await Curtain.findAndCountAll({
-        where: { typeId, brandId },
+        where: whereClause,
         limit,
         offset,
       });
     }
+
     return res.json(curtains);
   }
 

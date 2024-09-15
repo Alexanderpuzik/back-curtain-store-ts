@@ -1,6 +1,6 @@
 import { DataTypes, Sequelize } from 'sequelize';
 import dbConnection from '../db';
-import { BasketInstance, UserInstance } from './interfaces';
+import { BasketInstance, CurtainInstance, UserInstance } from './interfaces';
 
 const sequelize = dbConnection();
 
@@ -41,12 +41,37 @@ export const BasketCurtain = sequelize.define('basket_curtain', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
 });
 
-export const Curtain = sequelize.define('curtain', {
-  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-  name: { type: DataTypes.STRING, unique: true, allowNull: false },
-  price: { type: DataTypes.INTEGER, allowNull: false },
-  rating: { type: DataTypes.INTEGER, defaultValue: 0 },
-  img: { type: DataTypes.STRING, allowNull: false },
+export const Curtain = sequelize.define<CurtainInstance>('curtain', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  name: {
+    type: DataTypes.STRING,
+    unique: true,
+    allowNull: false,
+  },
+  price: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  rating: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  },
+  img: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  brandId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  typeId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
 });
 
 export const Type = sequelize.define('type', {
