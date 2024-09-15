@@ -1,8 +1,7 @@
 import globals from 'globals';
-import pluginJs from '@eslint/js';
+import js from '@eslint/js';
 import tsEslint from '@typescript-eslint/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
-// Импортируем eslint-plugin-prettier
 import prettierPlugin from 'eslint-plugin-prettier';
 
 export default [
@@ -11,7 +10,6 @@ export default [
     languageOptions: {
       globals: globals.browser,
       parser: tsParser,
-      // Опции для парсера
       parserOptions: {
         ecmaVersion: 2020,
         sourceType: 'module',
@@ -24,15 +22,12 @@ export default [
       '@typescript-eslint': tsEslint,
       prettier: prettierPlugin,
     },
-    extends: [
-      'plugin:@typescript-eslint/recommended',
-      'plugin:prettier/recommended',
-    ],
     rules: {
-      ...pluginJs.configs.recommended.rules,
+      ...js.configs.recommended.rules,
       ...tsEslint.configs.recommended.rules,
       'prettier/prettier': 'error',
-      // Ваши пользовательские правила (пример)
+
+      // Ваши пользовательские правила
       semi: ['error', 'always'],
       quotes: ['error', 'single'],
     },
