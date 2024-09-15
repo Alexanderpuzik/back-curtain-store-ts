@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { UserPayload } from '../interfaces';
+import { JwtPayload } from '../interfaces';
 
 export function checkRoleMiddleware(role: string) {
   return function (req: Request, res: Response, next: NextFunction) {
@@ -14,7 +14,7 @@ export function checkRoleMiddleware(role: string) {
       const secretKey = process.env.SECRET_KEY;
       if (!secretKey) return res.status(500).json({ message: 'Server error' });
 
-      const decoded = jwt.verify(token, secretKey) as UserPayload;
+      const decoded = jwt.verify(token, secretKey) as JwtPayload;
 
       if (decoded.role !== role) {
         return res.status(403).json({ message: 'Нет доступа' });
