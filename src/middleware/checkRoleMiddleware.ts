@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { UserPayload } from './interfaces';
 
-export default function checkRoleMiddleware(role: string) {
+export function checkRoleMiddleware(role: string) {
   return function (req: Request, res: Response, next: NextFunction) {
     if (req.method === 'OPTIONS') {
       next();

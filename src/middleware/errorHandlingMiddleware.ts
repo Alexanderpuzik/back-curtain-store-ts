@@ -1,7 +1,7 @@
 import ApiError from '../error/ApiError';
 import { Request, Response } from 'express';
 
-export default function errorHandlingMiddleware(
+export function errorHandlingMiddleware(
   err: Error,
   req: Request,
   res: Response
