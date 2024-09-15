@@ -3,7 +3,7 @@ import dbConnection from './db';
 import setModels from './models/models';
 import cors from 'cors';
 import fileUpload from 'express-fileupload';
-import router from './routers/index';
+import { router } from './routes';
 import { errorHandlingMiddleware } from './middlewares';
 import path from 'path';
 
