@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { UserPayload } from './interfaces';
+import { UserPayload } from '../interfaces';
 
 export function checkRoleMiddleware(role: string) {
   return function (req: Request, res: Response, next: NextFunction) {
