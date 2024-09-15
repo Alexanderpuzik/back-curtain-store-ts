@@ -19,8 +19,6 @@ export function authMiddleware(
 
     const decoded = jwt.verify(token, secretKey) as UserPayload;
 
-    //FIXME - do not use @ts-ignore
-    //@ts-ignore
     req.user = decoded;
     next();
   } catch (e) {

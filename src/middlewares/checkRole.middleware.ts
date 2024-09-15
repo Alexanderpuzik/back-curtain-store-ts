@@ -19,8 +19,7 @@ export function checkRoleMiddleware(role: string) {
       if (decoded.role !== role) {
         return res.status(403).json({ message: 'Нет доступа' });
       }
-      //FIXME - do not use @ts-ignore
-      //@ts-ignore
+
       req.user = decoded;
       next();
     } catch {
