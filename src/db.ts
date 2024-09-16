@@ -1,19 +1,41 @@
-import { Sequelize } from 'sequelize';
+import { Sequelize } from 'sequelize-typescript';
+import dotenv from 'dotenv';
+dotenv.config();
 
-export default function dbConnection() {
-  const dbName = process.env.DB_NAME;
-  const user = process.env.DB_USER;
-  const password = process.env.DB_PASSWORD;
-  const host = process.env.DB_HOST;
-  const port = process.env.DB_PORT;
-
-  if (!dbName || !user || !password || !host || !port) {
-    throw new Error('Not found db connection env');
+const getEnv = (name: string): string => {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(`❌ Environment variable ${name} is not defined.`);
   }
+  return value;
+};
 
-  return new Sequelize(dbName, user, password, {
-    dialect: 'postgres',
-    host,
-    port: parseInt(port),
-  });
-}
+const dbName = getEnv('DB_NAME');
+const dbUser = getEnv('DB_USER');
+const dbPassword = getEnv('DB_PASSWORD');
+const dbHost = getEnv('DB_HOST');
+const dbPort = getEnv('DB_PORT');
+
+const sequelize = new Sequelize({
+  database: dbName,
+  dialect: 'postgres',
+  username: dbUser,
+  password: dbPassword,
+  host: dbHost,
+  port: parseInt(dbPort),
+  logging: false,
+});
+
+const connectToDb = async () => {
+  try {
+    await sequelize.authenticate();
+    // await sequelize.sync();
+    console.log(
+      '🚀 Connection to the database has been established successfully.'
+    );
+  } catch (error) {
+    console.error('❌ Unable to connect to the database:', error);
+  }
+};
+
+export { sequelize, connectToDb };

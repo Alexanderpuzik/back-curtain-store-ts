@@ -1,8 +1,6 @@
-import { DataTypes, Sequelize } from 'sequelize';
-import dbConnection from '../db';
+import { DataTypes } from 'sequelize';
+import { sequelize } from '../db';
 import { BasketInstance, CurtainInstance, UserInstance } from './interfaces';
-
-const sequelize = dbConnection();
 
 export const User = sequelize.define<UserInstance>('user', {
   id: {
