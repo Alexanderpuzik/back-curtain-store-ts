@@ -16,7 +16,7 @@ const dbPassword = getEnv('DB_PASSWORD');
 const dbHost = getEnv('DB_HOST');
 const dbPort = getEnv('DB_PORT');
 
-const sequelize = new Sequelize({
+export const sequelize = new Sequelize({
   database: dbName,
   dialect: 'postgres',
   username: dbUser,
@@ -26,10 +26,10 @@ const sequelize = new Sequelize({
   logging: false,
 });
 
-const connectToDb = async () => {
+export const connectToDb = async () => {
   try {
     await sequelize.authenticate();
-    await sequelize.sync();
+    await sequelize.sync({ alter: true });
     console.log(
       '✅ Connection to the database has been established successfully.'
     );
@@ -37,5 +37,3 @@ const connectToDb = async () => {
     console.error('❌ Unable to connect to the database:', error);
   }
 };
-
-export { sequelize, connectToDb };

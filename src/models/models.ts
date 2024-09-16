@@ -1,6 +1,16 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../db';
-import { BasketInstance, CurtainInstance, UserInstance } from './interfaces';
+import {
+  BasketCurtainInstance,
+  BasketInstance,
+  BrandInstance,
+  CurtainInfoInstance,
+  CurtainInstance,
+  RatingInstance,
+  TypeBrandInstance,
+  TypeInstance,
+  UserInstance,
+} from './interfaces';
 
 export const User = sequelize.define<UserInstance>('user', {
   id: {
@@ -35,9 +45,14 @@ export const Basket = sequelize.define<BasketInstance>('basket', {
   },
 });
 
-export const BasketCurtain = sequelize.define('basket_curtain', {
-  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-});
+export const BasketCurtain = sequelize.define<BasketCurtainInstance>(
+  'basket_curtain',
+  {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    basketId: { type: DataTypes.INTEGER, allowNull: false },
+    curtainId: { type: DataTypes.INTEGER, allowNull: false },
+  }
+);
 
 export const Curtain = sequelize.define<CurtainInstance>('curtain', {
   id: {
@@ -72,28 +87,34 @@ export const Curtain = sequelize.define<CurtainInstance>('curtain', {
   },
 });
 
-export const Type = sequelize.define('type', {
+export const Type = sequelize.define<TypeInstance>('type', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   name: { type: DataTypes.STRING, unique: true, allowNull: false },
 });
 
-export const Brand = sequelize.define('brand', {
+export const Brand = sequelize.define<BrandInstance>('brand', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   name: { type: DataTypes.STRING, unique: true, allowNull: false },
 });
 
-export const Rating = sequelize.define('rating', {
+export const Rating = sequelize.define<RatingInstance>('rating', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   rate: { type: DataTypes.INTEGER, allowNull: false },
+  userId: { type: DataTypes.INTEGER, allowNull: false },
+  curtainId: { type: DataTypes.INTEGER, allowNull: false },
 });
 
-export const CurtainInfo = sequelize.define('curtain_info', {
-  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-  title: { type: DataTypes.STRING, allowNull: false },
-  description: { type: DataTypes.STRING, allowNull: false },
-});
+export const CurtainInfo = sequelize.define<CurtainInfoInstance>(
+  'curtain_info',
+  {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    title: { type: DataTypes.STRING, allowNull: false },
+    description: { type: DataTypes.STRING, allowNull: false },
+    curtainId: { type: DataTypes.INTEGER, allowNull: false },
+  }
+);
 
-export const TypeBrand = sequelize.define('type_brand', {
+export const TypeBrand = sequelize.define<TypeBrandInstance>('type_brand', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
 });
 

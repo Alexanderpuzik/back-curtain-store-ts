@@ -1,10 +1,10 @@
-import { Model } from 'sequelize';
+import { Model, Optional } from 'sequelize';
 
-export interface BasketAttributes {
-  id?: number;
+interface BasketAttributes {
+  id: number;
   userId: number;
 }
 
 export interface BasketInstance
-  extends Model<BasketAttributes>,
+  extends Model<BasketAttributes, Optional<BasketAttributes, 'id'>>,
     BasketAttributes {}

@@ -32,7 +32,7 @@ class UserController {
     }
     const hashPassword = await bcrypt.hash(password, 5);
     const user = await User.create({ email, role, password: hashPassword });
-    if (!user || !user.id) return next(ApiError.internal('User not created'));
+    if (!user) return next(ApiError.internal('User not created'));
     const basket = await Basket.create({ userId: user.id });
     const token = generateJwt(user.id, user.email, user.role);
     return res.json({ token });
@@ -41,7 +41,7 @@ class UserController {
   async login(req: Request, res: Response, next: NextFunction) {
     const { email, password }: { email: string; password: string } = req.body;
     const user = await User.findOne({ where: { email } });
-    if (!user || !user.id) {
+    if (!user) {
       return next(ApiError.internal('User not found'));
     }
     const comparePassword = bcrypt.compareSync(password, user.password);

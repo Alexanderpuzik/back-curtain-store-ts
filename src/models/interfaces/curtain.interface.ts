@@ -1,7 +1,7 @@
-import { Model } from 'sequelize';
+import { Model, Optional } from 'sequelize';
 
-export interface CurtainAttributes {
-  id?: number;
+interface CurtainAttributes {
+  id: number;
   name: string;
   price: number;
   rating?: number;
@@ -11,5 +11,5 @@ export interface CurtainAttributes {
 }
 
 export interface CurtainInstance
-  extends Model<CurtainAttributes>,
+  extends Model<CurtainAttributes, Optional<CurtainAttributes, 'id'>>,
     CurtainAttributes {}
