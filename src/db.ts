@@ -29,7 +29,7 @@ const sequelize = new Sequelize({
 const connectToDb = async () => {
   try {
     await sequelize.authenticate();
-    // await sequelize.sync();
+    await sequelize.sync();
     console.log(
       '🚀 Connection to the database has been established successfully.'
     );
