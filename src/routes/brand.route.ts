@@ -1,5 +1,5 @@
 import express from 'express';
-import brandController from '../controllers/brandController';
+import brandController from '../controllers/brand.controller';
 import { checkRoleMiddleware } from '../middlewares';
 
 export const brandRouter = express.Router();

@@ -1,5 +1,5 @@
 import express from 'express';
-import curtainController from '../controllers/curtainController';
+import curtainController from '../controllers/curtain.controller';
 import { checkRoleMiddleware } from '../middlewares';
 
 export const curtainRouter = express.Router();

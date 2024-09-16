@@ -1,5 +1,5 @@
 import express from 'express';
-import typeController from '../controllers/typeController';
+import typeController from '../controllers/type.controller';
 import { checkRoleMiddleware } from '../middlewares';
 
 export const typeRouter = express.Router();

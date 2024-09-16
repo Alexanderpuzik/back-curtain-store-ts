@@ -22,6 +22,7 @@ class UserController {
       password,
       role,
     }: { email: string; password: string; role: string } = req.body;
+
     if (!email || !password) {
       return next(ApiError.badRequest('Incorrect email or password'));
     }
