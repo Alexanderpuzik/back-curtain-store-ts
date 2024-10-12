@@ -6,6 +6,14 @@ import prettierPlugin from 'eslint-plugin-prettier';
 
 export default [
   {
+    env: {
+      node: true,
+      es6: true,
+    },
+    parserOptions: {
+      ecmaVersion: 2018,
+      sourceType: 'module',
+    },
     files: ['**/*.{js,mjs,cjs,ts}'],
     languageOptions: {
       globals: globals.browser,
